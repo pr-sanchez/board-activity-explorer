@@ -5,16 +5,21 @@ import {
   BoardProvider,
   useBoardState,
   useBoardDispatch,
+  useFilteredNotes,
 } from "@/features/board";
 import stickyNotes from "@/data/sticky-notes.json";
 import type { StickyNote as StickyNoteType } from "@/types";
+
+// Components
 import { StickyNote } from "@/components/ui/StickyNote";
-import styles from "./page.module.css";
 import { NoteList } from "@/components/ui/NoteList";
 import { Filters } from "@/components/ui/Filters";
+// Styles
+import styles from "./page.module.css";
 
 function BoardPage() {
-  const { notes, selectedNoteId } = useBoardState();
+  const { notes, filters, selectedNoteId } = useBoardState();
+  const filteredNotes = useFilteredNotes(notes, filters);
   const dispatch = useBoardDispatch();
 
   useEffect(() => {
@@ -36,7 +41,7 @@ function BoardPage() {
           <Filters />
 
           <NoteList>
-            {notes.map((note) => (
+            {filteredNotes.map((note) => (
               <StickyNote
                 key={note.id}
                 id={note.id}

@@ -1,0 +1,44 @@
+import type { BoardState, BoardAction } from "./actions";
+import { initialFilters } from "./constants";
+
+export function boardReducer(
+  state: BoardState,
+  action: BoardAction,
+): BoardState {
+  switch (action.type) {
+    case "SET_NOTES":
+      return { ...state, notes: action.payload };
+
+    case "TOGGLE_AUTHOR_FILTER": {
+      const authors = state.filters.authors.includes(action.payload)
+        ? state.filters.authors.filter((a) => a !== action.payload)
+        : [...state.filters.authors, action.payload];
+      return { ...state, filters: { ...state.filters, authors } };
+    }
+
+    case "SET_SEARCH_TEXT":
+      return {
+        ...state,
+        filters: { ...state.filters, searchText: action.payload },
+      };
+
+    case "SET_SORT":
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          sortField: action.payload.field,
+          sortDirection: action.payload.direction,
+        },
+      };
+
+    case "SELECT_NOTE":
+      return { ...state, selectedNoteId: action.payload };
+
+    case "RESET_FILTERS":
+      return { ...state, filters: initialFilters };
+
+    default:
+      return state;
+  }
+}

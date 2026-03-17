@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { boardReducer, initialState } from "../context";
-import type { BoardState } from "../context";
+import { boardReducer } from "../reducer";
+import { initialState } from "../constants";
+import type { BoardState } from "../actions";
 import type { StickyNote } from "@/types";
 
 const mockNote: StickyNote = {

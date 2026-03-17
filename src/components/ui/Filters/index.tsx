@@ -1,11 +1,94 @@
+import { useBoardState, useBoardDispatch } from "@/features/board";
+import { NOTE_COLORS, NOTE_COLOR_MAP, getUniqueAuthors } from "@/lib/utils";
+import type { SortField, SortDirection } from "@/types";
 import styles from "./styles.module.css";
 
 const Filters = () => {
+  const { notes, filters } = useBoardState();
+  const dispatch = useBoardDispatch();
+  const authors = getUniqueAuthors(notes);
+
   return (
     <aside className={styles.sidebar} aria-label="Filters">
-      <div className={styles.sidebarCard}>
-        <p className={styles.sidebarPlaceholder}>Filters will go here</p>
-      </div>
+      <fieldset className={styles.section}>
+        <legend className={styles.sectionTitle}>Search</legend>
+        <input
+          type="text"
+          placeholder="Search notes..."
+          value={filters.searchText}
+          onChange={(e) =>
+            dispatch({ type: "SET_SEARCH_TEXT", payload: e.target.value })
+          }
+          className={styles.searchInput}
+        />
+      </fieldset>
+
+      <fieldset className={styles.section}>
+        <legend className={styles.sectionTitle}>Authors</legend>
+        <ul className={styles.checkboxList}>
+          {authors.map((author) => (
+            <li key={author}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={filters.authors.includes(author)}
+                  onChange={() =>
+                    dispatch({ type: "TOGGLE_AUTHOR_FILTER", payload: author })
+                  }
+                />
+                {author}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </fieldset>
+
+      <fieldset className={styles.section}>
+        <legend className={styles.sectionTitle}>Sort</legend>
+        <div className={styles.sortRow}>
+          <select
+            value={filters.sortField}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_SORT",
+                payload: {
+                  field: e.target.value as SortField,
+                  direction: filters.sortDirection,
+                },
+              })
+            }
+            className={styles.select}
+            aria-label="Sort field"
+          >
+            <option value="createdAt">Date</option>
+            <option value="author">Author</option>
+          </select>
+          <select
+            value={filters.sortDirection}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_SORT",
+                payload: {
+                  field: filters.sortField,
+                  direction: e.target.value as SortDirection,
+                },
+              })
+            }
+            className={styles.select}
+            aria-label="Sort direction"
+          >
+            <option value="asc">Asc</option>
+            <option value="desc">Desc</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <button
+        onClick={() => dispatch({ type: "RESET_FILTERS" })}
+        className={styles.resetButton}
+      >
+        Reset filters
+      </button>
     </aside>
   );
 };
