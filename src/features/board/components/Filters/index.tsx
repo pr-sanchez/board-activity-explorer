@@ -12,7 +12,14 @@ interface FiltersProps {
   onToggleHighlight: () => void;
 }
 
-const Filters = ({ isGrouped, onToggleGroup, isVoting, onToggleVoting, highlightTopVoted, onToggleHighlight }: FiltersProps) => {
+const Filters = ({
+  isGrouped,
+  onToggleGroup,
+  isVoting,
+  onToggleVoting,
+  highlightTopVoted,
+  onToggleHighlight,
+}: FiltersProps) => {
   const { notes, filters } = useBoardState();
   const dispatch = useBoardDispatch();
   const authors = getUniqueAuthors(notes);
@@ -92,7 +99,12 @@ const Filters = ({ isGrouped, onToggleGroup, isVoting, onToggleVoting, highlight
           </select>
         </div>
       </fieldset>
-
+      <button
+        onClick={() => dispatch({ type: "RESET_FILTERS" })}
+        className={styles.resetButton}
+      >
+        Reset filters
+      </button>
       <button
         onClick={onToggleVoting}
         className={`${styles.groupButton} ${!isVoting ? styles.groupButtonInactive : ""}`}
@@ -117,13 +129,6 @@ const Filters = ({ isGrouped, onToggleGroup, isVoting, onToggleVoting, highlight
         aria-pressed={isGrouped}
       >
         {isGrouped ? "Ungroup notes" : "Auto-group by topic"}
-      </button>
-
-      <button
-        onClick={() => dispatch({ type: "RESET_FILTERS" })}
-        className={styles.resetButton}
-      >
-        Reset filters
       </button>
     </aside>
   );

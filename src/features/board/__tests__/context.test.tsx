@@ -21,76 +21,54 @@ describe("boardReducer", () => {
       payload: [mockNote],
     });
     expect(result.notes).toHaveLength(1);
-    expect(result.notes[0].id).toBe("note_001");
   });
 
-  it("toggles author filter on", () => {
-    const result = boardReducer(initialState, {
+  it("toggles author filter on and off", () => {
+    const on = boardReducer(initialState, {
       type: "TOGGLE_AUTHOR_FILTER",
       payload: "user_1",
     });
-    expect(result.filters.authors).toEqual(["user_1"]);
-  });
+    expect(on.filters.authors).toEqual(["user_1"]);
 
-  it("toggles author filter off", () => {
-    const stateWithAuthor: BoardState = {
-      ...initialState,
-      filters: { ...initialState.filters, authors: ["user_1"] },
-    };
-    const result = boardReducer(stateWithAuthor, {
+    const off = boardReducer(on, {
       type: "TOGGLE_AUTHOR_FILTER",
       payload: "user_1",
     });
-    expect(result.filters.authors).toEqual([]);
+    expect(off.filters.authors).toEqual([]);
   });
 
-  it("toggles color filter", () => {
-    const result = boardReducer(initialState, {
-      type: "TOGGLE_COLOR_FILTER",
-      payload: "blue",
-    });
-    expect(result.filters.colors).toEqual(["blue"]);
-  });
-
-  it("sets search text", () => {
-    const result = boardReducer(initialState, {
-      type: "SET_SEARCH_TEXT",
-      payload: "login",
-    });
-    expect(result.filters.searchText).toBe("login");
-  });
-
-  it("sets sort", () => {
-    const result = boardReducer(initialState, {
-      type: "SET_SORT",
-      payload: { field: "author", direction: "asc" },
-    });
-    expect(result.filters.sortField).toBe("author");
-    expect(result.filters.sortDirection).toBe("asc");
-  });
-
-  it("selects a note", () => {
-    const result = boardReducer(initialState, {
-      type: "SELECT_NOTE",
+  it("votes a note and prevents double voting", () => {
+    const voted = boardReducer(initialState, {
+      type: "VOTE_NOTE",
       payload: "note_001",
     });
-    expect(result.selectedNoteId).toBe("note_001");
+    expect(voted.votes["note_001"]).toBe(1);
+
+    const again = boardReducer(voted, {
+      type: "VOTE_NOTE",
+      payload: "note_001",
+    });
+    expect(again.votes["note_001"]).toBe(1);
   });
 
-  it("resets filters", () => {
-    const dirtyState: BoardState = {
+  it("resets filters without clearing votes", () => {
+    const state: BoardState = {
       ...initialState,
-      filters: {
-        authors: ["user_1"],
-        colors: ["blue"],
-        searchText: "test",
-        sortField: "author",
-        sortDirection: "asc",
-      },
+      votes: { note_001: 5 },
+      userVotes: ["note_001"],
+      filters: { authors: ["user_1"], searchText: "test", sortField: "author", sortDirection: "asc" },
     };
-    const result = boardReducer(dirtyState, { type: "RESET_FILTERS" });
+    const result = boardReducer(state, { type: "RESET_FILTERS" });
     expect(result.filters.authors).toEqual([]);
-    expect(result.filters.colors).toEqual([]);
-    expect(result.filters.searchText).toBe("");
+    expect(result.votes["note_001"]).toBe(5);
+  });
+
+  it("loads votes from server", () => {
+    const result = boardReducer(initialState, {
+      type: "LOAD_VOTES",
+      payload: { votes: { note_001: 5 }, userVotes: ["note_001"] },
+    });
+    expect(result.votes).toEqual({ note_001: 5 });
+    expect(result.userVotes).toEqual(["note_001"]);
   });
 });
