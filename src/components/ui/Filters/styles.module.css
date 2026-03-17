@@ -97,6 +97,30 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+.groupButton {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  color: #ffffff;
+  background-color: #3b82f6;
+  border: 1px solid #3b82f6;
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.groupButton:hover {
+  background-color: #2563eb;
+}
+
+.groupButtonInactive {
+  color: #3b82f6;
+  background-color: #ffffff;
+}
+
+.groupButtonInactive:hover {
+  background-color: #eff6ff;
+}
+
 .resetButton {
   width: 100%;
   padding: 0.5rem;

@@ -3,7 +3,12 @@ import { NOTE_COLORS, NOTE_COLOR_MAP, getUniqueAuthors } from "@/lib/utils";
 import type { SortField, SortDirection } from "@/types";
 import styles from "./styles.module.css";
 
-const Filters = () => {
+interface FiltersProps {
+  isGrouped: boolean;
+  onToggleGroup: () => void;
+}
+
+const Filters = ({ isGrouped, onToggleGroup }: FiltersProps) => {
   const { notes, filters } = useBoardState();
   const dispatch = useBoardDispatch();
   const authors = getUniqueAuthors(notes);
@@ -82,6 +87,14 @@ const Filters = () => {
           </select>
         </div>
       </fieldset>
+
+      <button
+        onClick={onToggleGroup}
+        className={`${styles.groupButton} ${!isGrouped ? styles.groupButtonInactive : ""}`}
+        aria-pressed={isGrouped}
+      >
+        {isGrouped ? "Ungroup notes" : "Auto-group by topic"}
+      </button>
 
       <button
         onClick={() => dispatch({ type: "RESET_FILTERS" })}
