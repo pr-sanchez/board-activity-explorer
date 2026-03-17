@@ -10,6 +10,8 @@ export const initialFilters: BoardFilters = {
 
 export const initialState: BoardState = {
   notes: [],
+  votes: {},
+  userVotes: [],
   filters: initialFilters,
   selectedNoteId: null,
 };

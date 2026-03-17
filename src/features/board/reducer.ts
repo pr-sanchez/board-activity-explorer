@@ -35,6 +35,23 @@ export function boardReducer(
     case "SELECT_NOTE":
       return { ...state, selectedNoteId: action.payload };
 
+    case "VOTE_NOTE": {
+      const noteId = action.payload;
+      if (state.userVotes.includes(noteId)) return state;
+      return {
+        ...state,
+        votes: { ...state.votes, [noteId]: (state.votes[noteId] || 0) + 1 },
+        userVotes: [...state.userVotes, noteId],
+      };
+    }
+
+    case "LOAD_VOTES":
+      return {
+        ...state,
+        votes: action.payload.votes,
+        userVotes: action.payload.userVotes,
+      };
+
     case "RESET_FILTERS":
       return { ...state, filters: initialFilters };
 

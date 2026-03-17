@@ -6,9 +6,13 @@ import styles from "./styles.module.css";
 interface FiltersProps {
   isGrouped: boolean;
   onToggleGroup: () => void;
+  isVoting: boolean;
+  onToggleVoting: () => void;
+  highlightTopVoted: boolean;
+  onToggleHighlight: () => void;
 }
 
-const Filters = ({ isGrouped, onToggleGroup }: FiltersProps) => {
+const Filters = ({ isGrouped, onToggleGroup, isVoting, onToggleVoting, highlightTopVoted, onToggleHighlight }: FiltersProps) => {
   const { notes, filters } = useBoardState();
   const dispatch = useBoardDispatch();
   const authors = getUniqueAuthors(notes);
@@ -67,6 +71,7 @@ const Filters = ({ isGrouped, onToggleGroup }: FiltersProps) => {
           >
             <option value="createdAt">Date</option>
             <option value="author">Author</option>
+            <option value="votes">Most Voted</option>
           </select>
           <select
             value={filters.sortDirection}
@@ -87,6 +92,24 @@ const Filters = ({ isGrouped, onToggleGroup }: FiltersProps) => {
           </select>
         </div>
       </fieldset>
+
+      <button
+        onClick={onToggleVoting}
+        className={`${styles.groupButton} ${!isVoting ? styles.groupButtonInactive : ""}`}
+        aria-pressed={isVoting}
+      >
+        {isVoting ? "End voting session" : "Start voting session"}
+      </button>
+
+      {isVoting && (
+        <button
+          onClick={onToggleHighlight}
+          className={`${styles.groupButton} ${!highlightTopVoted ? styles.groupButtonInactive : ""}`}
+          aria-pressed={highlightTopVoted}
+        >
+          {highlightTopVoted ? "Show all equally" : "Highlight top 5 voted"}
+        </button>
+      )}
 
       <button
         onClick={onToggleGroup}

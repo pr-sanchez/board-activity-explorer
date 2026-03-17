@@ -4,6 +4,7 @@ import type { StickyNote, BoardFilters } from "@/types";
 export function useFilteredNotes(
   notes: StickyNote[],
   filters: BoardFilters,
+  votes: Record<string, number> = {},
 ): StickyNote[] {
   return useMemo(() => {
     let result = notes;
@@ -34,11 +35,13 @@ export function useFilteredNotes(
           );
         case "author":
           return dir * a.author.localeCompare(b.author);
+        case "votes":
+          return dir * ((votes[a.id] || 0) - (votes[b.id] || 0));
         default:
           return 0;
       }
     });
 
     return result;
-  }, [notes, filters]);
+  }, [notes, filters, votes]);
 }

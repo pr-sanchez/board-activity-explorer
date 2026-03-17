@@ -16,7 +16,7 @@ export type NoteColor =
   | "orange"
   | "purple";
 
-export type SortField = "createdAt" | "author";
+export type SortField = "createdAt" | "author" | "votes";
 export type SortDirection = "asc" | "desc";
 
 export interface BoardFilters {
