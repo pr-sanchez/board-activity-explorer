@@ -3,6 +3,7 @@ import type { BoardState } from "./actions";
 
 export const initialFilters: BoardFilters = {
   authors: [],
+  colors: [],
   searchText: "",
   sortField: "createdAt",
   sortDirection: "desc",

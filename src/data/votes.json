@@ -2,7 +2,9 @@
   "votes": {
     "note_100": 3,
     "note_099": 1,
-    "note_092": 1
+    "note_092": 1,
+    "note_083": 1,
+    "note_012": 1
   },
   "voters": {
     "note_100": [
@@ -15,6 +17,12 @@
     ],
     "note_092": [
       "ec83efdc-f629-42b3-ad6a-2fe7aaa163cb"
+    ],
+    "note_083": [
+      "d98bf498-386b-4e95-8cff-64dba104cf48"
+    ],
+    "note_012": [
+      "d98bf498-386b-4e95-8cff-64dba104cf48"
     ]
   }
 }

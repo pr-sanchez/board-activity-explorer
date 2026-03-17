@@ -14,6 +14,11 @@ export function useFilteredNotes(
       result = result.filter((note) => filters.authors.includes(note.author));
     }
 
+    // Filter by colors
+    if (filters.colors.length > 0) {
+      result = result.filter((note) => filters.colors.includes(note.color));
+    }
+
     // Filter by search text
     if (filters.searchText.trim()) {
       const search = filters.searchText.toLowerCase();

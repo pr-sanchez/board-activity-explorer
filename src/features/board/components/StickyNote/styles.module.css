@@ -24,6 +24,12 @@
   opacity: 0.35;
 }
 
+.recent {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+}
+
 .text {
   color: #1f2937;
   flex: 1;

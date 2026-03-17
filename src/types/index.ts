@@ -21,6 +21,7 @@ export type SortDirection = "asc" | "desc";
 
 export interface BoardFilters {
   authors: string[];
+  colors: NoteColor[];
   searchText: string;
   sortField: SortField;
   sortDirection: SortDirection;

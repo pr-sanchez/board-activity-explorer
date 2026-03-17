@@ -16,6 +16,13 @@ export function boardReducer(
       return { ...state, filters: { ...state.filters, authors } };
     }
 
+    case "TOGGLE_COLOR_FILTER": {
+      const colors = state.filters.colors.includes(action.payload)
+        ? state.filters.colors.filter((c) => c !== action.payload)
+        : [...state.filters.colors, action.payload];
+      return { ...state, filters: { ...state.filters, colors } };
+    }
+
     case "SET_SEARCH_TEXT":
       return {
         ...state,
@@ -42,6 +49,16 @@ export function boardReducer(
         ...state,
         votes: { ...state.votes, [noteId]: (state.votes[noteId] || 0) + 1 },
         userVotes: [...state.userVotes, noteId],
+      };
+    }
+
+    case "MOVE_NOTE": {
+      const { id, x, y } = action.payload;
+      return {
+        ...state,
+        notes: state.notes.map((n) =>
+          n.id === id ? { ...n, x, y } : n,
+        ),
       };
     }
 

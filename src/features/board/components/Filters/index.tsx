@@ -10,6 +10,10 @@ interface FiltersProps {
   onToggleVoting: () => void;
   highlightTopVoted: boolean;
   onToggleHighlight: () => void;
+  isBoardView: boolean;
+  onToggleBoardView: () => void;
+  showRecent: boolean;
+  onToggleRecent: () => void;
 }
 
 const Filters = ({
@@ -19,6 +23,10 @@ const Filters = ({
   onToggleVoting,
   highlightTopVoted,
   onToggleHighlight,
+  isBoardView,
+  onToggleBoardView,
+  showRecent,
+  onToggleRecent,
 }: FiltersProps) => {
   const { notes, filters } = useBoardState();
   const dispatch = useBoardDispatch();
@@ -60,6 +68,27 @@ const Filters = ({
       </fieldset>
 
       <fieldset className={styles.section}>
+        <legend className={styles.sectionTitle}>Colors</legend>
+        <div className={styles.colorList}>
+          {NOTE_COLORS.map((color) => (
+            <button
+              key={color}
+              title={color}
+              aria-label={`Filter by ${color}`}
+              aria-pressed={filters.colors.includes(color)}
+              onClick={() =>
+                dispatch({ type: "TOGGLE_COLOR_FILTER", payload: color })
+              }
+              className={`${styles.colorSwatch} ${NOTE_COLOR_MAP[color]} ${
+                filters.colors.includes(color) ? styles.colorSwatchActive : ""
+              }`}
+            />
+          ))}
+        </div>
+      </fieldset>
+
+      {!isBoardView && (
+      <fieldset className={styles.section}>
         <legend className={styles.sectionTitle}>Sort</legend>
         <div className={styles.sortRow}>
           <select
@@ -99,6 +128,7 @@ const Filters = ({
           </select>
         </div>
       </fieldset>
+      )}
       <button
         onClick={() => dispatch({ type: "RESET_FILTERS" })}
         className={styles.resetButton}
@@ -124,11 +154,29 @@ const Filters = ({
       )}
 
       <button
-        onClick={onToggleGroup}
-        className={`${styles.groupButton} ${!isGrouped ? styles.groupButtonInactive : ""}`}
-        aria-pressed={isGrouped}
+        onClick={onToggleRecent}
+        className={`${styles.groupButton} ${!showRecent ? styles.groupButtonInactive : ""}`}
+        aria-pressed={showRecent}
       >
-        {isGrouped ? "Ungroup notes" : "Auto-group by topic"}
+        {showRecent ? "Clear recent highlight" : "Highlight recently added"}
+      </button>
+
+      {!isBoardView && (
+        <button
+          onClick={onToggleGroup}
+          className={`${styles.groupButton} ${!isGrouped ? styles.groupButtonInactive : ""}`}
+          aria-pressed={isGrouped}
+        >
+          {isGrouped ? "Ungroup notes" : "Auto-group by topic"}
+        </button>
+      )}
+
+      <button
+        onClick={onToggleBoardView}
+        className={`${styles.groupButton} ${!isBoardView ? styles.groupButtonInactive : ""}`}
+        aria-pressed={isBoardView}
+      >
+        {isBoardView ? "Grid view" : "Board view"}
       </button>
     </aside>
   );

@@ -1,0 +1,28 @@
+.container {
+  flex: 1;
+  border-radius: 0.5rem;
+  border: 1px solid #e4e4e7;
+  background-color: #f9fafb;
+  position: relative;
+}
+
+.canvas {
+  position: relative;
+  padding: 2rem;
+}
+
+.noteWrapper {
+  position: absolute;
+  width: 12rem;
+  cursor: grab;
+}
+
+.noteWrapper:active {
+  cursor: grabbing;
+  z-index: 10;
+}
+
+.dragging {
+  opacity: 0.8;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}

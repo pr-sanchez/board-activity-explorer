@@ -12,6 +12,7 @@ interface StickyNoteProps {
   hasVoted?: boolean;
   showVoting?: boolean;
   topRank?: number | null;
+  isRecent?: boolean;
   isDimmed?: boolean;
   isSelected?: boolean;
   onSelect?: (id: string) => void;
@@ -27,6 +28,7 @@ const StickyNote = ({
   hasVoted = false,
   showVoting = false,
   topRank = null,
+  isRecent = false,
   isDimmed = false,
   isSelected = false,
   onSelect,
@@ -45,7 +47,7 @@ const StickyNote = ({
           onSelect?.(id);
         }
       }}
-      className={`${styles.note} ${NOTE_COLOR_MAP[color]} ${isSelected ? styles.selected : ""} ${isDimmed ? styles.dimmed : ""}`}
+      className={`${styles.note} ${NOTE_COLOR_MAP[color]} ${isSelected ? styles.selected : ""} ${isDimmed ? styles.dimmed : ""} ${isRecent ? styles.recent : ""}`}
     >
       {topRank !== null && (
         <span className={styles.topBadge} aria-label={`Top ${topRank}`}>

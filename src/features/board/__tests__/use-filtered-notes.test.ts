@@ -11,6 +11,7 @@ const notes: StickyNote[] = [
 
 const defaultFilters: BoardFilters = {
   authors: [],
+  colors: [],
   searchText: "",
   sortField: "createdAt",
   sortDirection: "desc",
