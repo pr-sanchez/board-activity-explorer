@@ -1,7 +1,7 @@
 .note {
   position: relative;
-  width: 12rem;
-  height: 12rem;
+  width: 100%;
+  min-height: 10rem;
   border-radius: 0.125rem;
   padding: 1rem;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);

@@ -41,9 +41,9 @@ test.describe("Board Activity Explorer", () => {
     await expect(page.locator("article button")).toHaveCount(0);
 
     await page.getByRole("button", { name: "Start voting session" }).click();
-    expect(await page.locator("article button").count()).toBeGreaterThan(0);
+    await expect(page.locator("article button").first()).toBeVisible({ timeout: 5000 });
 
     await page.getByRole("button", { name: "End voting session" }).click();
-    await expect(page.locator("article button")).toHaveCount(0);
+    await expect(page.locator("article button")).toHaveCount(0, { timeout: 5000 });
   });
 });
