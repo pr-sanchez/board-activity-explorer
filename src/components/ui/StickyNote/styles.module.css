@@ -1,0 +1,33 @@
+.note {
+  position: relative;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 0.125rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.note:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.selected {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.text {
+  color: #1f2937;
+}
+
+.author {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.75rem;
+  color: #4b5563;
+}

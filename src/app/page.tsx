@@ -7,46 +7,50 @@ import {
   useBoardDispatch,
 } from "@/features/board";
 import stickyNotes from "@/data/sticky-notes.json";
-import type { StickyNote } from "@/types";
+import type { StickyNote as StickyNoteType } from "@/types";
+import { StickyNote } from "@/components/ui/StickyNote";
+import styles from "./page.module.css";
+import { NoteList } from "@/components/ui/NoteList";
+import { Filters } from "@/components/ui/Filters";
 
 function BoardPage() {
-  const { notes } = useBoardState();
+  const { notes, selectedNoteId } = useBoardState();
   const dispatch = useBoardDispatch();
 
   useEffect(() => {
-    dispatch({ type: "SET_NOTES", payload: stickyNotes as StickyNote[] });
+    dispatch({ type: "SET_NOTES", payload: stickyNotes as StickyNoteType[] });
   }, [dispatch]);
 
   console.log({ notes });
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <header className="border-b border-zinc-200 bg-white px-6 py-4 dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
-          Board Activity Explorer
-        </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Board Activity Explorer</h1>
+        <p className={styles.subtitle}>
           {notes.length} sticky notes on this board
         </p>
       </header>
 
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        {/* Sidebar filters + board content will go here */}
-        <div className="flex gap-6">
-          <aside className="w-64 shrink-0" aria-label="Filters">
-            {/* Filter components placeholder */}
-            <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-              <p className="text-sm text-zinc-500">Filters will go here</p>
-            </div>
-          </aside>
+      <main className={styles.content}>
+        <div className={styles.layout}>
+          <Filters />
 
-          <section className="flex-1" aria-label="Board notes">
-            {/* Notes grid/canvas placeholder */}
-            <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-              <p className="text-sm text-zinc-500">
-                Notes display will go here ({notes.length} notes loaded)
-              </p>
-            </div>
-          </section>
+          <NoteList>
+            {notes.map((note) => (
+              <StickyNote
+                key={note.id}
+                id={note.id}
+                text={note.text}
+                author={note.author}
+                color={note.color}
+                createdAt={note.createdAt}
+                isSelected={selectedNoteId === note.id}
+                onSelect={(id) =>
+                  dispatch({ type: "SELECT_NOTE", payload: id })
+                }
+              />
+            ))}
+          </NoteList>
         </div>
       </main>
     </div>
