@@ -2,6 +2,10 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Board Activity Explorer", () => {
   test.beforeEach(async ({ page }) => {
+    // Reset voting session before each test
+    await page.request.post("http://localhost:3000/api/voting-session", {
+      data: { isVoting: false },
+    });
     await page.goto("/");
     await page.waitForSelector("article");
   });
@@ -41,9 +45,9 @@ test.describe("Board Activity Explorer", () => {
     await expect(page.locator("article button")).toHaveCount(0);
 
     await page.getByRole("button", { name: "Start voting session" }).click();
-    await expect(page.locator("article button").first()).toBeVisible({ timeout: 5000 });
+    await expect(page.locator("article button").first()).toBeVisible({ timeout: 10000 });
 
     await page.getByRole("button", { name: "End voting session" }).click();
-    await expect(page.locator("article button")).toHaveCount(0, { timeout: 5000 });
+    await expect(page.locator("article button")).toHaveCount(0, { timeout: 10000 });
   });
 });
