@@ -13,10 +13,10 @@ import stickyNotes from "@/data/sticky-notes.json";
 import type { StickyNote as StickyNoteType } from "@/types";
 
 // Components
-import { StickyNote } from "@/components/ui/StickyNote";
-import { NoteList } from "@/components/ui/NoteList";
-import { Filters } from "@/components/ui/Filters";
-import { NoteGroup } from "@/components/ui/NoteGroup";
+import { StickyNote } from "@/features/board/components/StickyNote";
+import { NoteList } from "@/features/board/components/NoteList";
+import { Filters } from "@/features/board/components/Filters";
+import { NoteGroup } from "@/features/board/components/NoteGroup";
 // Styles
 import styles from "./page.module.css";
 
