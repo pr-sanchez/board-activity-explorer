@@ -38,7 +38,6 @@ npm run build      # Production build
 ```
 src/
 ├── app/                        # Next.js App Router, pages, API routes
-├── components/ui/              # Shared generic UI primitives
 ├── features/board/             # Board feature (components, hooks, state, tests)
 ├── data/                       # Sticky notes JSON and persisted votes
 ├── hooks/                      # App-wide hooks
