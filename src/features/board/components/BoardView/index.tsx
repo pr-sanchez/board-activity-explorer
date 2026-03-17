@@ -14,6 +14,7 @@ interface BoardViewProps {
 }
 
 const PADDING = 250;
+const MOVE_STEP = 20;
 
 const BoardView = ({ notes, onMoveNote }: BoardViewProps) => {
   const containerRef = useRef<HTMLElement>(null);
@@ -83,9 +84,30 @@ const BoardView = ({ notes, onMoveNote }: BoardViewProps) => {
         {notes.map((note) => (
           <div
             key={note.id}
+            tabIndex={0}
+            role="button"
+            aria-label={`Move note. Use arrow keys to reposition.`}
             className={`${styles.noteWrapper} ${draggingId === note.id ? styles.dragging : ""}`}
             style={{ left: note.x, top: note.y }}
             onPointerDown={(e) => handlePointerDown(e, note.id, note.x, note.y)}
+            onKeyDown={(e) => {
+              let newX = note.x;
+              let newY = note.y;
+              switch (e.key) {
+                case "ArrowLeft":  newX = Math.max(0, note.x - MOVE_STEP); break;
+                case "ArrowRight": newX = note.x + MOVE_STEP; break;
+                case "ArrowUp":    newY = Math.max(0, note.y - MOVE_STEP); break;
+                case "ArrowDown":  newY = note.y + MOVE_STEP; break;
+                default: return;
+              }
+              e.preventDefault();
+              onMoveNote?.(note.id, newX, newY);
+              fetch("/api/notes", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: note.id, x: newX, y: newY }),
+              }).catch(() => {});
+            }}
           >
             {note.element}
           </div>
