@@ -1,28 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "src/data/voting-session.json");
-
-interface SessionData {
-  isVoting: boolean;
-}
-
-function readSession(): SessionData {
-  try {
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return { isVoting: false };
-  }
-}
-
-function writeSession(data: SessionData) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
+import redis from "@/lib/redis";
 
 export async function GET() {
-  return NextResponse.json(readSession());
+  const raw = await redis.get("voting-session");
+  const isVoting = raw ? JSON.parse(raw).isVoting : false;
+  return NextResponse.json({ isVoting });
 }
 
 export async function POST(request: NextRequest) {
@@ -36,7 +18,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const data = { isVoting };
-  writeSession(data);
-  return NextResponse.json(data);
+  await redis.set("voting-session", JSON.stringify({ isVoting }));
+  return NextResponse.json({ isVoting });
 }

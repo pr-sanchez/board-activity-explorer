@@ -1,29 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "src/data/votes.json");
+import redis from "@/lib/redis";
 
 interface VotesData {
   votes: Record<string, number>;
-  voters: Record<string, string[]>; // noteId -> list of userIds who voted
+  voters: Record<string, string[]>;
 }
 
-function readVotes(): VotesData {
-  try {
-    const raw = fs.readFileSync(DATA_FILE, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return { votes: {}, voters: {} };
-  }
+async function readVotes(): Promise<VotesData> {
+  const raw = await redis.get("votes");
+  if (!raw) return { votes: {}, voters: {} };
+  return JSON.parse(raw);
 }
 
-function writeVotes(data: VotesData) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+async function writeVotes(data: VotesData) {
+  await redis.set("votes", JSON.stringify(data));
 }
 
 export async function GET() {
-  const data = readVotes();
+  const data = await readVotes();
   return NextResponse.json(data);
 }
 
@@ -38,8 +32,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const data = readVotes();
-
+  const data = await readVotes();
   const noteVoters = data.voters[noteId] || [];
   const alreadyVoted = noteVoters.includes(userId);
 
@@ -53,10 +46,7 @@ export async function POST(request: NextRequest) {
     data.voters[noteId] = [...noteVoters, userId];
   }
 
-  writeVotes(data);
+  await writeVotes(data);
 
-  return NextResponse.json({
-    votes: data.votes,
-    toggled: !alreadyVoted,
-  });
+  return NextResponse.json({ votes: data.votes, toggled: !alreadyVoted });
 }

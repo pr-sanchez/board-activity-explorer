@@ -1,25 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "src/data/note-positions.json");
+import redis from "@/lib/redis";
 
 type Positions = Record<string, { x: number; y: number }>;
 
-function readPositions(): Positions {
-  try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {
-    return {};
-  }
+async function readPositions(): Promise<Positions> {
+  const raw = await redis.get("note-positions");
+  if (!raw) return {};
+  return JSON.parse(raw);
 }
 
-function writePositions(data: Positions) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+async function writePositions(data: Positions) {
+  await redis.set("note-positions", JSON.stringify(data));
 }
 
 export async function GET() {
-  return NextResponse.json(readPositions());
+  return NextResponse.json(await readPositions());
 }
 
 export async function PATCH(request: NextRequest) {
@@ -32,9 +27,9 @@ export async function PATCH(request: NextRequest) {
     );
   }
 
-  const positions = readPositions();
+  const positions = await readPositions();
   positions[id] = { x, y };
-  writePositions(positions);
+  await writePositions(positions);
 
   return NextResponse.json({ ok: true });
 }
